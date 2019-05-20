@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../_services';
-import { User } from '../_models';
+import { UserToken } from '../_models/userToken';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -11,14 +12,14 @@ import { User } from '../_models';
 })
 export class NavbarComponent {
 
-  currentUser: User;
+  currentUser: UserToken;
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
-    this.authenticationService.currentUser$.subscribe(x => this.currentUser = x);
-    console.log(this.currentUser);
+    this.authenticationService.currentUser$.subscribe(
+      userToken => this.currentUser = userToken);
   }
 
   logout() {

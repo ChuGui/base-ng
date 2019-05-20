@@ -5,32 +5,42 @@ import { map } from 'rxjs/operators';
 
 import { User } from '../_models';
 import { environment } from '../../environments/environment';
+import * as jwt_decode from 'jwt-decode';
+import { UserToken } from '../_models/userToken';
 
-@Injectable()
+
+@Injectable({providedIn: 'root'})
 export class AuthenticationService {
-  private currentUserSubject$: BehaviorSubject<User>;
-  public currentUser$: Observable<User>;
+  private currentUserSubject$: BehaviorSubject<UserToken>;
+  public currentUser$: Observable<UserToken>;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject$ = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject$ = new BehaviorSubject<UserToken>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser$ = this.currentUserSubject$.asObservable();
   }
 
-  public get currentUserValue(): User {
+  public get currentUserValue(): UserToken {
     return this.currentUserSubject$.value;
   }
 
   login(username: string, password: string) {
     return this.http.post<any>(`${environment.apiUrl}/authentication_token`, {username, password})
-      .pipe(map(user => {
+      .pipe(map(data => {
         // login successful if there's a jwt token in the response
-        if (user && user.token) {
+        if (data && data.token) {
           // store user details an jwt token in local storage to keep user logged in between page refreshes
+          const userDetails: any = jwt_decode(data.token);
+          const user: UserToken = {
+            username: userDetails.username,
+            iat: userDetails.iat,
+            exp: userDetails.exp,
+            roles: userDetails.roles,
+            token: data.token
+          };
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject$.next(user);
         }
-
-        return user;
+        return data;
       }));
   }
 

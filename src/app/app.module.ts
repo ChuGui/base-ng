@@ -8,14 +8,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { JwtInterceptor } from './_helpers/jwt.interceptor';
-import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { JwtInterceptor, ErrorInterceptor} from './_helpers';
+import { HomepageComponent } from './homepage/homepage.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    NavbarComponent
+    NavbarComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,

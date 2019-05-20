@@ -1,0 +1,19 @@
+<h1 class="text-center"> Je suis l'homme page</h1>
+<h3> Utilisateur connecté</h3>
+<div *ngIf="currentUser">
+  <p>Username: {{currentUser.username}}</p>
+  <p>Iat: {{currentUser.iat}}</p>
+  <p>Exp: {{currentUser.exp}}</p>
+  <p>Temps de connexion autorisé: {{(currentUser.exp - currentUser.iat)/60}} min</p>
+  <div>
+    Roles:
+    <div class="container" *ngFor="let role of currentUser.roles">
+      <span>{{role}}</span>
+    </div>
+  </div>
+  <p>TOKEN: <span>{{currentUser.token}}</span></p>
+
+</div>
+<div *ngIf="!currentUser">
+  Aucun utilisateur connecté !
+</div>
